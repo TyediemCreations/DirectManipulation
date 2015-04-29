@@ -11,7 +11,7 @@ import java.awt.geom.RoundRectangle2D;
 /**
  * A simple demo of how to create a rectangular sprite.
  * 
- * Michael Terry
+ * Written by: Michael Terry
  */
 public class RectangleSprite extends Sprite {
 

@@ -5,16 +5,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Vector;
 import java.awt.geom.NoninvertibleTransformException;
-//*/
 
-/**
- * A building block for creating your own shapes that can be
- * transformed and that can respond to input. This class is
- * provided as an example; you will likely need to modify it
- * to meet the assignment requirements.
- * 
- * Michael Terry
- */
+
 public abstract class Sprite {
     
     /**
@@ -33,7 +25,6 @@ public abstract class Sprite {
     protected   Point2D             lastPoint           = null;                     // Last mouse point
     protected   InteractionMode     interactionMode     = InteractionMode.IDLE;     // Current interaction mode
     
-    //
     private int axisX=0;
     private int axisY=0;
     private int footMultiplier = 1;	//to handle feet having an initial rotation not recorded in 'currentRotation'
@@ -137,9 +128,6 @@ public abstract class Sprite {
     /**
      * Handle mouse drag event, with the assumption that we have already
      * been "selected" as the sprite to interact with.
-     * This is a very simple method that only works because we
-     * assume that the coordinate system has not been modified
-     * by scales or rotations.
      */
     protected void handleMouseDragEvent(MouseEvent e) {
         
@@ -165,7 +153,7 @@ public abstract class Sprite {
 		double theta;
 		if (newX==0) theta=0;
 		else  
-			theta = Math.atan((transformedPoint.getY()-transformedOld.getY())/newX);
+			theta = Math.atan(((transformedPoint.getY()-transformedOld.getY())/newX)/xScale);
 		if (Math.abs(currentRotation+theta) > maxRotation){
 			if (maxRotation == Math.toRadians(360)) currentRotation=0;
 			else if (currentRotation+theta > 0) theta = maxRotation-currentRotation;
@@ -233,10 +221,6 @@ public abstract class Sprite {
 
     /**
      * Locates the sprite that was hit by the given event.
-     * You *may* need to modify this method, depending on
-     * how you modify other parts of the class.
-     * 
-     * @return The sprite that was hit, or null if no sprite was hit
      */
     public Sprite getSpriteHit(MouseEvent e) {
         for (Sprite sprite : children) {

@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -13,6 +14,7 @@ import java.awt.event.KeyAdapter;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import java.awt.geom.AffineTransform;
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -24,7 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
-
+/**/
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,13 +34,22 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import javax.swing.JLabel;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+
+
 /**
  * A canvas that draws sprites and provides capabilities for recording events
  * and playing them back.
  * 
- * Michael Terry
  */
-public class SpriteCanvas extends JPanel {
+public class SpriteCanvas extends JPanel{
+
+	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
+	private static final String RESET = "reset";
+	static JLabel obj1 = new JLabel();
 
 	/**
 	 * Tracks our current interactive mode
@@ -48,14 +59,14 @@ public class SpriteCanvas extends JPanel {
 	}
 
 	private Vector<Sprite> sprites = new Vector<Sprite>(); // All sprites we're
-															// managing
+							       // managing
 	private Sprite interactiveSprite = null; // Sprite with which user is
-												// interacting
+						 // interacting
 	private InteractionMode interactionMode = InteractionMode.IDLE; // Current
-																	// interactive
-																	// mode
+									// interactive
+								  	// mode
 	private Vector<Serializable> eventStream = null; // Event stream for
-														// recording events
+							 // recording events
 	private long lastTime = -1; // Time of last event
 
 	public SpriteCanvas() {
@@ -82,6 +93,21 @@ public class SpriteCanvas extends JPanel {
 				handleMouseDragged(e);
 			}
 		});
+		obj1.getInputMap(IFW).put(KeyStroke.getKeyStroke("control R"), RESET);
+		obj1.getActionMap().put(RESET, new ResetAction(this));
+		this.add(obj1);
+	}
+
+	private class ResetAction extends AbstractAction{
+		SpriteCanvas canvas;
+		ResetAction(SpriteCanvas canvas){
+			this.canvas = canvas;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e){
+			canvas.resetCanvas();
+		}
 	}
 
 	/**
@@ -188,8 +214,7 @@ public class SpriteCanvas extends JPanel {
 	 * previously recorded. Thus, it is assumed that the sprites are in the
 	 * *exact same state* as when recording started. If not, you will get
 	 * unexpected results. This demo code DOES NOT try to reset the sprites to
-	 * the initial state they were in when recording started. You may want to
-	 * add this feature.
+	 * the initial state they were in when recording started. 
 	 * 
 	 * A message box will be shown if the demo file cannot be found.
 	 */
