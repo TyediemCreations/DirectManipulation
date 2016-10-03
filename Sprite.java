@@ -28,6 +28,7 @@ public abstract class Sprite {
     private int axisX=0;
     private int axisY=0;
     private int footMultiplier = 1;	//to handle feet having an initial rotation not recorded in 'currentRotation'
+					//multiplier is one of 1 or -1, for the left and right foot respectively
     private int initLength;
 
     private double currentRotation=0;
@@ -47,11 +48,18 @@ public abstract class Sprite {
     private double newLength;
     //
     
+    /*
+    Specifies a sprites x and y axis, as well as its maximum rotation
+    */
     public Sprite(int x, int y, int fullRotation) {
         axisX = x;
 	axisY = y;
 	maxRotation = Math.toRadians(fullRotation);
     }
+    /*
+    Specifies a sprites length in addition to axes and max rotation;
+    used leg sprites (i.e., sprites that are able to scale) 
+    */
     public Sprite(int x, int y, int fullRotation, int length) {
         axisX = x;
 	axisY = y;
@@ -59,8 +67,12 @@ public abstract class Sprite {
 	initLength = length;
 	newLength = initLength;
     }
-    
+    /*
+    Specifies a sprites parent;
+    Note: currently unused, as children are set manually in 'Main.makeSprite()'
+    */
     public Sprite(Sprite parent, int x, int y, int fullRotation) {
+	this.parent = parent;
         if (parent != null) {
             parent.addChild(this);
         }
@@ -91,23 +103,7 @@ public abstract class Sprite {
 
     
 
-    /*
-     * returns where a given mouse point is in relation to the 'actual' image being selected. 
-	Aids in various rotation calculations
-     */
-    public Point2D rotateHalp(Point2D p){
-	AffineTransform fullTransform = this.getFullTransform();
-        AffineTransform inverseTransform = null;
-        try {
-            inverseTransform = fullTransform.createInverse();
-        } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
-        Point2D newPoint = (Point2D)p.clone();
-        inverseTransform.transform(newPoint, newPoint);
-
-	return newPoint;
-    }
+    
 
     /**
      * Handles a mouse down event, assuming that the event has already
@@ -117,9 +113,9 @@ public abstract class Sprite {
         lastPoint = e.getPoint();	
 
         if (e.getButton() == MouseEvent.BUTTON1) {
-	    if (interactionMode == InteractionMode.SCALING && otherLeg != null) {} 
-            else if (parent == null) interactionMode = InteractionMode.DRAGGING;
-	    else interactionMode = InteractionMode.ROTATING;
+	    if (interactionMode == InteractionMode.SCALING && otherLeg != null) {}	//leg selected
+            else if (parent == null) interactionMode = InteractionMode.DRAGGING;	//body selected
+	    else interactionMode = InteractionMode.ROTATING;				//other selected
         }
 
         // Handle rotation, scaling mode depending on input
@@ -200,13 +196,30 @@ public abstract class Sprite {
     }
 
     /*
+     * returns where a given mouse point is in relation to the 'actual' image being selected. 
+	Aids in various rotation calculations
+     */
+    public Point2D rotateHalp(Point2D p){
+	AffineTransform fullTransform = this.getFullTransform();
+        AffineTransform inverseTransform = null;
+        try {
+            inverseTransform = fullTransform.createInverse();
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
+        Point2D newPoint = (Point2D)p.clone();
+        inverseTransform.transform(newPoint, newPoint);
+
+	return newPoint;
+    }
+
+    /*
      *	Scales a sprite and provides enough information for the children 
 	to be translated appropriately 
      */    
     public void scaleHalp(double newX, double oldX){
 	double scaleDistance = (newX-oldX)/50;
-	if (scaleDistance > 0) scaleDistance+=1;
-	else scaleDistance=1+scaleDistance;
+	scaleDistance += 1;
 
 	oldLength = newLength;
 	if (oldLength < 5 && scaleDistance < 1) return;	//these legs are waaay too small to be scaled down
@@ -262,7 +275,7 @@ public abstract class Sprite {
 	return (AffineTransform) scaleTransform.clone();
     }
     /**
-     * Performs an arbitrary transform on this sprite
+     * Performs an arbitrary (non-scaling) transform on this sprite
      */
     public void transform(AffineTransform t) {
 	if (t.equals(AffineTransform.getRotateInstance(Math.toRadians(-90),0,5)))

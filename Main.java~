@@ -13,8 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyAdapter;
 
-public class Main {
-
+public class Main { 
 	/**
 	 * Main code.
 	 */
@@ -27,14 +26,17 @@ public class Main {
 		JFrame f = new JFrame();
 		f.setJMenuBar(Main.makeMenuBar(canvas));
 		f.getContentPane().add(canvas);
+		
 		f.getContentPane().setLayout(new GridLayout(1, 1));
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(800, 600);
 		f.setVisible(true);
+
 	}
 	
 	/* Make necessary sprites in their initial positions */
 	private static Sprite makeSprite() {
+		/*create all sprites at position (0,0)*/
 		Sprite body = new RectangleSprite(34, 60);
 		Sprite head = new EllipseSprite(22,15,0,7,50);
 
@@ -51,12 +53,16 @@ public class Main {
 		Sprite LupperLeg = new EllipseSprite(36,12,0,6,90,36);
 		Sprite LlowerLeg = new EllipseSprite(40,12,0,6,90,40);
 		Sprite Lfoot = new EllipseSprite(20,10,0,5,35);
-
 		/*
 		such that initialization values represent:
 		(width, height, xAxis of rotation, yAxis, maximum rotation, initial object length)
 		*/
 
+		/*
+		'body' sprite is moved further onto screen; 
+		other sprites are moved into their correct positions relative to
+		their parents
+		*/
 		body.transform(AffineTransform.getTranslateInstance(100,100));
 		head.transform(AffineTransform.getTranslateInstance(3,-10));
 
@@ -74,6 +80,7 @@ public class Main {
 		LlowerLeg.transform(AffineTransform.getTranslateInstance(36, 0));
 		Lfoot.transform(AffineTransform.getTranslateInstance(40, 2));
 
+		/*child sprites are added to parents*/
 		body.addChild(head);
 		body.addChild(RupperArm);
 		body.addChild(RupperLeg);
@@ -88,11 +95,13 @@ public class Main {
 		LlowerArm.addChild(Lhand);
 		LlowerLeg.addChild(Lfoot);
 
+		/*leg sprites have access to other legs, for purposes of scaling*/
 		RupperLeg.addOtherLeg(LupperLeg);
 		RlowerLeg.addOtherLeg(LlowerLeg);
 		LupperLeg.addOtherLeg(RupperLeg);
 		LlowerLeg.addOtherLeg(RlowerLeg);
 
+		/*relevant sprites are rotated into their correct initial rotations*/
 		LupperArm.transform(AffineTransform.getRotateInstance(Math.toRadians(180),0,5));
 		head.transform(AffineTransform.getRotateInstance(Math.toRadians(-90),7,0));
 		RupperLeg.transform(AffineTransform.getRotateInstance(Math.toRadians(90),0,0));
@@ -104,8 +113,6 @@ public class Main {
 	}
 
 	/* Menu with recording and playback. */
-
-	
 	private static JMenuBar makeMenuBar(final SpriteCanvas canvas) {
 		JMenuBar mbar = new JMenuBar();
 		
@@ -134,7 +141,6 @@ public class Main {
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				canvas.resetCanvas();
-				//canvas.addSprite(Main.makeSprite());
 			}
 		});				
 
@@ -170,6 +176,7 @@ public class Main {
 		
 		mbar.add(file);
 		mbar.add(script);
+		
 		return mbar;
 	}
 

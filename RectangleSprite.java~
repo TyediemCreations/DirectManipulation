@@ -11,12 +11,11 @@ import java.awt.geom.RoundRectangle2D;
 /**
  * A simple demo of how to create a rectangular sprite.
  * 
- * Michael Terry
+ * Written by: Michael Terry
  */
 public class RectangleSprite extends Sprite {
 
     private RoundRectangle2D rect = null;
-    //private Ellipse2D rect = null;
 
     /**
      * Creates a rectangle based at the origin with the specified
@@ -28,12 +27,13 @@ public class RectangleSprite extends Sprite {
     }
     /**
      * Creates a rectangle based at the origin with the specified
-     * width, height, and parent
+     * width, height, and parent (not currently used, as only the body
+     * sprite is a Rectangle)
      */
-    public RectangleSprite(int width, int height, Sprite parentSprite) {
-        super(parentSprite,0,0,0);
-        this.initialize(width, height);
-    }
+    //public RectangleSprite(int width, int height, Sprite parentSprite) {
+    //    super(parentSprite,0,0,0);
+    //    this.initialize(width, height);
+    //}
     
     private void initialize(int width, int height) {
         rect = new RoundRectangle2D.Double(0, 0, width, height,20,20);
@@ -58,8 +58,6 @@ public class RectangleSprite extends Sprite {
     protected void drawSprite(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.draw(rect);
-//        g.draw(this.getFullTransform().createTransformedShape(rect));
-	//System.out.println(this.toString());
     }
     
     public String toString() {

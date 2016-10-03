@@ -36,6 +36,7 @@ public class Main {
 	
 	/* Make necessary sprites in their initial positions */
 	private static Sprite makeSprite() {
+		/*create all sprites at position (0,0)*/
 		Sprite body = new RectangleSprite(34, 60);
 		Sprite head = new EllipseSprite(22,15,0,7,50);
 
@@ -52,12 +53,38 @@ public class Main {
 		Sprite LupperLeg = new EllipseSprite(36,12,0,6,90,36);
 		Sprite LlowerLeg = new EllipseSprite(40,12,0,6,90,40);
 		Sprite Lfoot = new EllipseSprite(20,10,0,5,35);
-
 		/*
 		such that initialization values represent:
 		(width, height, xAxis of rotation, yAxis, maximum rotation, initial object length)
 		*/
 
+		/*child sprites are added to parents*/
+		body.addChild(head);
+		body.addChild(RupperArm);
+		body.addChild(RupperLeg);
+		body.addChild(LupperArm);
+		body.addChild(LupperLeg);
+		RupperArm.addChild(RlowerArm);
+		RupperLeg.addChild(RlowerLeg);
+		RlowerArm.addChild(Rhand);
+		RlowerLeg.addChild(Rfoot);
+		LupperArm.addChild(LlowerArm);
+		LupperLeg.addChild(LlowerLeg);
+		LlowerArm.addChild(Lhand);
+		LlowerLeg.addChild(Lfoot);
+
+		/*leg sprites have access to other legs, for purposes of scaling*/
+		RupperLeg.addOtherLeg(LupperLeg);
+		RlowerLeg.addOtherLeg(LlowerLeg);
+		LupperLeg.addOtherLeg(RupperLeg);
+		LlowerLeg.addOtherLeg(RlowerLeg);
+
+
+		/*
+		'body' sprite is moved further onto screen; 
+		other sprites are moved into their correct positions relative to
+		their parents
+		*/
 		body.transform(AffineTransform.getTranslateInstance(100,100));
 		head.transform(AffineTransform.getTranslateInstance(3,-10));
 
@@ -75,25 +102,7 @@ public class Main {
 		LlowerLeg.transform(AffineTransform.getTranslateInstance(36, 0));
 		Lfoot.transform(AffineTransform.getTranslateInstance(40, 2));
 
-		body.addChild(head);
-		body.addChild(RupperArm);
-		body.addChild(RupperLeg);
-		body.addChild(LupperArm);
-		body.addChild(LupperLeg);
-		RupperArm.addChild(RlowerArm);
-		RupperLeg.addChild(RlowerLeg);
-		RlowerArm.addChild(Rhand);
-		RlowerLeg.addChild(Rfoot);
-		LupperArm.addChild(LlowerArm);
-		LupperLeg.addChild(LlowerLeg);
-		LlowerArm.addChild(Lhand);
-		LlowerLeg.addChild(Lfoot);
-
-		RupperLeg.addOtherLeg(LupperLeg);
-		RlowerLeg.addOtherLeg(LlowerLeg);
-		LupperLeg.addOtherLeg(RupperLeg);
-		LlowerLeg.addOtherLeg(RlowerLeg);
-
+		/*relevant sprites are rotated into their correct initial rotations*/
 		LupperArm.transform(AffineTransform.getRotateInstance(Math.toRadians(180),0,5));
 		head.transform(AffineTransform.getRotateInstance(Math.toRadians(-90),7,0));
 		RupperLeg.transform(AffineTransform.getRotateInstance(Math.toRadians(90),0,0));

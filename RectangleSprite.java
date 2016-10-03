@@ -27,7 +27,8 @@ public class RectangleSprite extends Sprite {
     }
     /**
      * Creates a rectangle based at the origin with the specified
-     * width, height, and parent
+     * width, height, and parent (not currently used, as only the body
+     * sprite is a Rectangle)
      */
     public RectangleSprite(int width, int height, Sprite parentSprite) {
         super(parentSprite,0,0,0);
