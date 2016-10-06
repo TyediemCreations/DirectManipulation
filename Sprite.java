@@ -276,6 +276,7 @@ public abstract class Sprite {
     }
     /**
      * Performs an arbitrary (non-scaling) transform on this sprite
+     * Called from Main to set up initial transformations on sprites
      */
     public void transform(AffineTransform t) {
 	if (t.equals(AffineTransform.getRotateInstance(Math.toRadians(-90),0,5)))

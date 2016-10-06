@@ -41,6 +41,9 @@ public class EllipseSprite extends Sprite {
         this.initialize(width, height);
     }
     
+    /**
+     * Initializes the ellipse with width and height
+     */
     private void initialize(int width, int height) {
         rect = new Ellipse2D.Double(0, 0, width, height);
     }
@@ -62,12 +65,17 @@ public class EllipseSprite extends Sprite {
     }
 
     
-
+    /**
+     * Draw the ellipse to canvas
+     */
     protected void drawSprite(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.draw(rect);
     }
     
+    /**
+     * Ellipse's 'toString' method; used to identify in stack-trace if necessary
+     */
     public String toString() {
         return "EllipseSprite: " + rect;
     }

@@ -35,6 +35,9 @@ public class RectangleSprite extends Sprite {
         this.initialize(width, height);
     }
     
+    /**
+     * Initializes rectangle with width and height
+     */
     private void initialize(int width, int height) {
         rect = new RoundRectangle2D.Double(0, 0, width, height,20,20);
     }
@@ -55,11 +58,17 @@ public class RectangleSprite extends Sprite {
         return rect.contains(newPoint);
     }
 
+    /**
+     * Draw the rectangle to canvas
+     */
     protected void drawSprite(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.draw(rect);
     }
     
+    /**
+     * Rectangle's 'toString' method; used to identify in stack-trace if necessary
+     */
     public String toString() {
         return "RectangleSprite: " + rect;
     }
